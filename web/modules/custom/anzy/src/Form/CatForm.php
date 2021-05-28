@@ -5,6 +5,8 @@ namespace Drupal\anzy\Form;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * @file
@@ -12,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 
 /**
- * Provides an Cat email form.
+ * Provides an Cat form.
  */
 class CatForm extends FormBase {
   /**
@@ -20,7 +22,7 @@ class CatForm extends FormBase {
    */
 
   public function getFormId() {
-    return 'cat_email_form';
+    return 'cat_form';
   }
 
   /**
@@ -28,7 +30,7 @@ class CatForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $node = \Drupal::routeMatch()->getParameter('node');
-    $form['email'] = array(
+    $form['name'] = array(
       '#title' => t("Your cat's name:"),
       '#type' => 'textfield',
       '#size' => 25,
@@ -46,10 +48,10 @@ class CatForm extends FormBase {
    * (@inheritDoc)
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (strlen($form_state->getValue('email')) < 2) {
-      $form_state->setErrorByName('email', t('The name is too short. Please enter valid name.'));
-    } elseif (strlen($form_state->getValue('email')) > 32) {
-      $form_state->setErrorByName('email', t('The name is too long. Please enter valid name.'));
+    if (strlen($form_state->getValue('name')) < 2) {
+      $form_state->setErrorByName('name', t('The name is too short. Please enter valid name.'));
+    } elseif (strlen($form_state->getValue('name')) > 32) {
+      $form_state->setErrorByName('name', t('The name is too long. Please enter valid name.'));
     }
   }
 
