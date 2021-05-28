@@ -1,7 +1,7 @@
 anzy.cats_page:
   path: '/anzy/cats'
   defaults:
-    _controller: '\Drupal\anzy\Controller\AnzyController::catsPage'
+    _form: '\Drupal\anzy\Form\CatForm'
     _title: 'Hello! You can add here a photo of your cat.'
   requirements:
     _permission: 'access content'

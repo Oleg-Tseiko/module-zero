@@ -64,3 +64,20 @@
     }
   }
 }
+.cat-email-form {
+  input {
+    padding: 1.5625rem 0.625rem;
+    border-radius: 0;
+  }
+  button {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 0.9375rem 1.25rem;
+    text-transform: uppercase;
+    background-color: #ff3232;
+    border: none;
+  }
+  .form-required {
+    margin-top: 10px;
+  }
+}
