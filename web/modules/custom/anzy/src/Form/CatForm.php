@@ -30,6 +30,10 @@ class CatForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $node = \Drupal::routeMatch()->getParameter('node');
+    $form['system_messages'] = [
+      '#markup' => '<div id="form-system-messages"></div>',
+      '#weight' => -100,
+    ];
     $form['name'] = array(
       '#title' => t("Your cat's name:"),
       '#type' => 'textfield',
@@ -47,6 +51,7 @@ class CatForm extends FormBase {
           'type' => 'throbber',
         ],
       ],
+      '#suffix' => '<div class="email-validation-message"></div>',
     );
     return $form;
   }
@@ -71,16 +76,19 @@ class CatForm extends FormBase {
   }
 
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
-    $message = "Form submission successful.";
-    if (strlen($form_state->getValue('name')) < 2) {
-      $message = "The name is too short. Please enter valid name.";
-    }
-    elseif (strlen($form_state->getValue('name')) > 32) {
-      $message = "The name is too long. Please enter valid name.";
-    }
-    $response = new AjaxResponse();
-    $response->addCommand(new HtmlCommand('#edit-name--description', $message));
-    return $response;
+    $ajax_response = new AjaxResponse();
+    $message = [
+      '#theme' => 'status_messages',
+      '#message_list' => $this->messenger()->all(),
+      '#status_headings' => [
+        'status' => t('Status message'),
+        'error' => t('Error message'),
+        'warning' => t('Warning message'),
+      ],
+    ];
+    $messages = \Drupal::service('renderer')->render($message);
+    $ajax_response->addCommand(new HtmlCommand('#form-system-messages', $messages));
+    return $ajax_response;
   }
 
 }
