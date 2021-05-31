@@ -57,7 +57,8 @@ class CatForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (strlen($form_state->getValue('name')) < 2) {
       $form_state->setErrorByName('name', t('The name is too short. Please enter valid name.'));
-    } elseif (strlen($form_state->getValue('name')) > 32) {
+    }
+    elseif (strlen($form_state->getValue('name')) > 32) {
       $form_state->setErrorByName('name', t('The name is too long. Please enter valid name.'));
     }
   }
@@ -65,15 +66,21 @@ class CatForm extends FormBase {
   /**
    * (@inheritdoc)
    */
-
   public function submitForm(array &$form, FormStateInterface $form_state) {
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
   }
+
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
-    $message = \Drupal::messenger()->all();
-    $messages = \Drupal::service('renderer')->render($message);
+    $message = "Form submission successful.";
+    if (strlen($form_state->getValue('name')) < 2) {
+      $message = "The name is too short. Please enter valid name.";
+    }
+    elseif (strlen($form_state->getValue('name')) > 32) {
+      $message = "The name is too long. Please enter valid name.";
+    }
     $response = new AjaxResponse();
-    $response->addCommand(new HtmlCommand('#edit-name--description', $messages));
+    $response->addCommand(new HtmlCommand('#edit-name--description', $message));
     return $response;
   }
+
 }
