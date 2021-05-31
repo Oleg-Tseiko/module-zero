@@ -6,7 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\HtmlCommand;
 
 /**
  * @file
@@ -40,6 +40,13 @@ class CatForm extends FormBase {
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Add cat'),
+      '#ajax' => [
+        'callback' => '::ajaxForm',
+        'event' => 'click',
+        'progress' => [
+          'type' => 'throbber',
+        ],
+      ],
     );
     return $form;
   }
@@ -58,8 +65,15 @@ class CatForm extends FormBase {
   /**
    * (@inheritdoc)
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    \Drupal::messenger()->addMessage(t("The form is working."));
-  }
 
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
+  }
+  public function ajaxForm(array &$form, FormStateInterface $form_state) {
+    $message = \Drupal::messenger()->all();
+    $messages = \Drupal::service('renderer')->render($message);
+    $response = new AjaxResponse();
+    $response->addCommand(new HtmlCommand('#edit-name--description', $messages));
+    return $response;
+  }
 }
