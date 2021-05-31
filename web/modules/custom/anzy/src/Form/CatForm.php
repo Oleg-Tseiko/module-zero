@@ -80,7 +80,7 @@ class CatForm extends FormBase {
     elseif (strlen($form_state->getValue('name')) > 32) {
       $form_state->setErrorByName('name', t('The name is too long. Please enter valid name.'));
     }
-    if (filter_var($form_state->getValue('email', FILTER_VALIDATE_EMAIL))) {
+    if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
       $form_state->setErrorByName('name', t('Invalid email format. Please enter valid email.'));
     }
   }
@@ -97,11 +97,11 @@ class CatForm extends FormBase {
    */
   public function validateAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    if (filter_var($form_state->getValue('email', FILTER_VALIDATE_EMAIL))) {
-      $response->addCommand(new HtmlCommand('.email-validation-message', 'Invalid email format.'));
+    if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert-danger">Invalid email format. Please enter valid email.</div>'));
     }
     else {
-      $response->addCommand(new HtmlCommand('.email-validation-message', ''));
+      $response->addCommand(new HtmlCommand('#form-system-messages', ''));
     }
     return $response;
   }
