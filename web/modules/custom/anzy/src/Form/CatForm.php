@@ -41,6 +41,20 @@ class CatForm extends FormBase {
       '#description' => t("Name should be at least 2 characters and less than 32 characters"),
       '#required' => TRUE,
     );
+    $form['email'] = array(
+      '#title' => t("Email:"),
+      '#type' => 'email',
+      '#description' => t("example@gmail.com"),
+      '#required' => TRUE,
+      '#ajax' => [
+        'callback' => '::validateAjax',
+        'event' => 'change',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => t('Verifying email..'),
+        ],
+      ],
+    );
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Add cat'),
@@ -66,6 +80,9 @@ class CatForm extends FormBase {
     elseif (strlen($form_state->getValue('name')) > 32) {
       $form_state->setErrorByName('name', t('The name is too long. Please enter valid name.'));
     }
+    if (filter_var($form_state->getValue('email', FILTER_VALIDATE_EMAIL))) {
+      $form_state->setErrorByName('name', t('Invalid email format. Please enter valid email.'));
+    }
   }
 
   /**
@@ -75,6 +92,23 @@ class CatForm extends FormBase {
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
   }
 
+  /**
+   * (@inheritDoc)
+   */
+  public function validateAjax(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if (filter_var($form_state->getValue('email', FILTER_VALIDATE_EMAIL))) {
+      $response->addCommand(new HtmlCommand('.email-validation-message', 'Invalid email format.'));
+    }
+    else {
+      $response->addCommand(new HtmlCommand('.email-validation-message', ''));
+    }
+    return $response;
+  }
+
+  /**
+   * (@inheritdoc)
+   */
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
     $ajax_response = new AjaxResponse();
     $message = [
