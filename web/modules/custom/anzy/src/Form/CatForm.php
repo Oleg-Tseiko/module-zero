@@ -59,7 +59,7 @@ class CatForm extends FormBase {
       '#type' => 'submit',
       '#value' => t('Add cat'),
       '#ajax' => [
-        'callback' => '::ajaxForm',
+        'callback' => '::ajaxForm', 
         'event' => 'click',
         'progress' => [
           'type' => 'throbber',
