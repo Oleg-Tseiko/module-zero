@@ -55,11 +55,21 @@ class CatForm extends FormBase {
         ],
       ],
     );
+    $form['image'] = array(
+      '#title' => t("Image:"),
+      '#type' => 'managed_file',
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('png jpg jpeg'),
+        'file_validate_size' => array(2097152),
+      ),
+      '#description' => t("insert image below size of 2MB. Supported formats: png jpg jpeg."),
+      '#required' => TRUE,
+    );
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Add cat'),
       '#ajax' => [
-        'callback' => '::ajaxForm', 
+        'callback' => '::ajaxForm',
         'event' => 'click',
         'progress' => [
           'type' => 'throbber',
