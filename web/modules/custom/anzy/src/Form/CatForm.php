@@ -75,7 +75,6 @@ class CatForm extends FormBase {
           'type' => 'throbber',
         ],
       ],
-      '#suffix' => '<div class="email-validation-message"></div>',
     );
     return $form;
   }

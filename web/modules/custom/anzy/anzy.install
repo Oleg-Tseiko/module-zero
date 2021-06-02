@@ -1,0 +1,34 @@
+<?php
+function anzy_schema() {
+  $schema['anzy'] = array(
+    'description' => 'stores email, name and uid for cats',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for the cat.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that added this cat',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'mail' => array(
+        'description' => "User\'s email address.",
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when cat was submitted.'
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+}
