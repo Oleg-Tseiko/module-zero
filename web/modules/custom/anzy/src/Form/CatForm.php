@@ -98,6 +98,16 @@ class CatForm extends FormBase {
    * (@inheritdoc)
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+    $connection = \Drupal::service('database');
+    $result = $connection->insert('anzy')
+      ->fields([
+        'name' => $form_state->getValue('name'),
+        'mail' => $form_state->getValue('email'),
+        'uid' => $user->id(),
+        'created' => time(),
+      ])
+      ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
   }
 
