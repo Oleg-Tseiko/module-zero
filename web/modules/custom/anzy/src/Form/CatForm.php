@@ -2,11 +2,11 @@
 
 namespace Drupal\anzy\Form;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @file
@@ -18,9 +18,18 @@ use Drupal\Core\Ajax\HtmlCommand;
  */
 class CatForm extends FormBase {
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->currentUser = $container->get('current_user');
+
+    return $instance;
+  }
+
+  /**
    * (@inheritdoc)
    */
-
   public function getFormId() {
     return 'cat_form';
   }
@@ -29,7 +38,6 @@ class CatForm extends FormBase {
    * (@inheritdoc)
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $node = \Drupal::routeMatch()->getParameter('node');
     $form['system_messages'] = [
       '#markup' => '<div id="form-system-messages"></div>',
       '#weight' => -100,
@@ -98,14 +106,14 @@ class CatForm extends FormBase {
    * (@inheritdoc)
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+    $user = $this->account->id();
     $connection = \Drupal::service('database');
     $result = $connection->insert('anzy')
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
         'uid' => $user->id(),
-        'created' => time(),
+        'created' => $this->get('today_time'),
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
