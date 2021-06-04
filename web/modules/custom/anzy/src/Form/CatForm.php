@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,6 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CatForm extends FormBase {
   /**
+   * The current time.
+   *
+   * @var \Drupal\Core\Datatime
+   */
+  protected $currentTime;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
@@ -30,8 +36,8 @@ class CatForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
+    $instance->currentTime = $container->get('datetime.time');
     $instance->currentUser = $container->get('current_user');
-
     return $instance;
   }
 
@@ -119,8 +125,8 @@ class CatForm extends FormBase {
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
-        'created' => $form_state->getValue('email'),
-        'uid' => $form_state->getValue('email'),
+        'uid' => $this->currentUser->id(),
+        'created' => $this->currentTime->getCurrentTime(),
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
