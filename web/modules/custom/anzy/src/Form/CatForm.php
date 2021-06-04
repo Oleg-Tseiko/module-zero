@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,10 +19,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CatForm extends FormBase {
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
     $instance->currentUser = $container->get('current_user');
 
     return $instance;
@@ -106,14 +114,13 @@ class CatForm extends FormBase {
    * (@inheritdoc)
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $user = $this->account->id();
     $connection = \Drupal::service('database');
     $result = $connection->insert('anzy')
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
-        'uid' => $user->id(),
-        'created' => $this->get('today_time'),
+        'created' => $form_state->getValue('email'),
+        'uid' => $form_state->getValue('email'),
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
