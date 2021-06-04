@@ -31,9 +31,10 @@ function anzy_schema() {
       ),
       'image' => array(
         'description' => "User\'s cat picture.",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'default' => '',
       ),
       'created' => array(
         'description' => 'Timestamp when cat was submitted.',

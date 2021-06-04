@@ -42,14 +42,14 @@ class CatForm extends FormBase {
   }
 
   /**
-   * (@inheritdoc)
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'cat_form';
   }
 
   /**
-   * (@inheritdoc)
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['system_messages'] = [
@@ -80,6 +80,7 @@ class CatForm extends FormBase {
     $form['image'] = array(
       '#title' => t("Image:"),
       '#type' => 'managed_file',
+      '#upload_location' => 'public://module-images',
       '#upload_validators' => array(
         'file_validate_extensions' => array('png jpg jpeg'),
         'file_validate_size' => array(2097152),
@@ -102,7 +103,7 @@ class CatForm extends FormBase {
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (strlen($form_state->getValue('name')) < 2) {
@@ -117,9 +118,14 @@ class CatForm extends FormBase {
   }
 
   /**
-   * (@inheritdoc)
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $image = $form_state->getValue('image');
+    $file = \Drupal\file\Entity\File::load($image[0]);
+    $file->setPermanent();
+    $file->save();
+    \Drupal::service('file.usage')->add($file, 'my_module_name', 'file', $file->id());
     $connection = \Drupal::service('database');
     $result = $connection->insert('anzy')
       ->fields([
@@ -127,13 +133,14 @@ class CatForm extends FormBase {
         'mail' => $form_state->getValue('email'),
         'uid' => $this->currentUser->id(),
         'created' => $this->currentTime->getCurrentTime(),
+        'image' => $form_state['values']['image'],
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
   }
 
   /**
-   * (@inheritDoc)
+   * Function that validate email input with ajax.
    */
   public function validateAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
@@ -147,7 +154,7 @@ class CatForm extends FormBase {
   }
 
   /**
-   * (@inheritdoc)
+   * Function to validate form with ajax.
    */
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
     $ajax_response = new AjaxResponse();
