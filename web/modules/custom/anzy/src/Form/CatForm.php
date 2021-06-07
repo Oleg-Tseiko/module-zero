@@ -121,11 +121,6 @@ class CatForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $image = $form_state->getValue('image');
-    $file = \Drupal\file\Entity\File::load($image[0]);
-    $file->setPermanent();
-    $file->save();
-    \Drupal::service('file.usage')->add($file, 'my_module_name', 'file', $file->id());
     $connection = \Drupal::service('database');
     $result = $connection->insert('anzy')
       ->fields([
@@ -133,7 +128,7 @@ class CatForm extends FormBase {
         'mail' => $form_state->getValue('email'),
         'uid' => $this->currentUser->id(),
         'created' => $this->currentTime->getCurrentTime(),
-        'image' => $form_state['values']['image'],
+        'image' => reset($form_state->getValue('image')),
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
