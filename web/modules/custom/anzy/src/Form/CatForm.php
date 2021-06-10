@@ -59,7 +59,7 @@ class CatForm extends FormBase {
     $form['name'] = array(
       '#title' => t("Your cat's name:"),
       '#type' => 'textfield',
-      '#size' => 25,
+      '#size' => 32,
       '#description' => t("Name should be at least 2 characters and less than 32 characters"),
       '#required' => TRUE,
     );
