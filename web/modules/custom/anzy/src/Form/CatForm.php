@@ -143,7 +143,7 @@ class CatForm extends FormBase {
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
         'uid' => $this->currentUser->id(),
-        'created' => $this->currentTime->getCurrentTime(),
+        'created' => date('d-m-Y', $this->currentTime->getCurrentTime()),
         'image' => $form_state->getValue('image')[0],
       ])
       ->execute();

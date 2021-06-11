@@ -68,7 +68,6 @@ class AnzyController extends ControllerBase {
     $info = array_reverse($info);
     $rows = [];
     foreach ($info as &$value) {
-      $value['created'] = date('d-m-Y', $value['created']);
       $fid = $value['image'];
       $file = File::load($fid);
       $value['image'] = [
