@@ -10,9 +10,9 @@ use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @file
- *
  * Contains \Drupal\anzy\Form\CatForm.
+ *
+ * @file
  */
 
 /**
@@ -135,7 +135,7 @@ class CatForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $connection = \Drupal::service('database');
-    $file = File::load($form_state->getValue('image')[0]) ;
+    $file = File::load($form_state->getValue('image')[0]);
     $file->setPermanent();
     $file->save();
     $result = $connection->insert('anzy')

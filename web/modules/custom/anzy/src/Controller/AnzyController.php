@@ -61,7 +61,7 @@ class AnzyController extends ControllerBase {
     $headers = [
       t('Cat name'),
       t('Email'),
-      t('Created'),
+      t('Submitted'),
       t('Photo'),
     ];
     $info = json_decode(json_encode($this->load()), TRUE);
@@ -73,8 +73,8 @@ class AnzyController extends ControllerBase {
       $value['image'] = [
         '#type' => 'image',
         '#theme' => 'image_style',
-        '#style_name' => 'thumbnail',
-        '#uri' => !empty($file) ? $file->getFileUri() : '',
+        '#style_name' => 'large',
+        '#uri' => $file->getFileUri(),
       ];
       $renderer = \Drupal::service('renderer');
       $value['image'] = $renderer->render($value['image']);
