@@ -44,9 +44,7 @@ class AnzyController extends ControllerBase {
   public function load() {
     $connection = \Drupal::service('database');
     $query = $connection->select('anzy', 'a');
-    $query->join('users_field_data', 'u', 'a.uid = u.uid');
     $query->fields('a', ['name', 'mail', 'created', 'image']);
-    $query->addField('u', 'name', 'username');
     $result = $query->execute()->fetchAll();
     return $result;
   }
@@ -55,21 +53,22 @@ class AnzyController extends ControllerBase {
    * Render all cat entries.
    */
   public function report() {
-    $content = array();
+    $content = [];
     $content['form'] = $this->form();
-    $content['message'] = array(
+    $content['message'] = [
       '#markup' => $this->t('Below is a list of all cats including username, email, image and submission date.'),
-    );
-    $headers = array(
+    ];
+    $headers = [
       t('Cat name'),
       t('Email'),
       t('Created'),
       t('Photo'),
-      t('User'),
-    );
-    $info = json_decode(json_encode($this->load()), true);
+    ];
+    $info = json_decode(json_encode($this->load()), TRUE);
+    $info = array_reverse($info);
     $rows = [];
-    foreach ($info as $value) {
+    foreach ($info as &$value) {
+      $value['created'] = date('d-m-Y', $value['created']);
       $fid = $value['image'];
       $file = File::load($fid);
       $value['image'] = [
@@ -78,17 +77,16 @@ class AnzyController extends ControllerBase {
         '#style_name' => 'thumbnail',
         '#uri' => !empty($file) ? $file->getFileUri() : '',
       ];
+      $renderer = \Drupal::service('renderer');
+      $value['image'] = $renderer->render($value['image']);
       array_push($rows, $value);
     }
-    $content['table'] = array(
+    $content['table'] = [
       '#type' => 'table',
       '#header' => $headers,
+      '#rows' => $rows,
       '#empty' => t('No entries available.'),
-    );
-    $content['table']['#rows'] = [];
-    foreach ($rows as $row) {
-      array_push($content['table']['#rows'], $row);
-    }
+    ];
     return $content;
   }
 

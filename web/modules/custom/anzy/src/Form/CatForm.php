@@ -6,10 +6,12 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @file
+ *
  * Contains \Drupal\anzy\Form\CatForm.
  */
 
@@ -56,39 +58,47 @@ class CatForm extends FormBase {
       '#markup' => '<div id="form-system-messages"></div>',
       '#weight' => -100,
     ];
-    $form['name'] = array(
+    $form['name'] = [
       '#title' => t("Your cat's name:"),
       '#type' => 'textfield',
       '#size' => 32,
       '#description' => t("Name should be at least 2 characters and less than 32 characters"),
       '#required' => TRUE,
-    );
-    $form['email'] = array(
+      '#ajax' => [
+        'callback' => '::validateAjax',
+        'event' => 'input',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => t('Verifying name..'),
+        ],
+      ],
+    ];
+    $form['email'] = [
       '#title' => t("Email:"),
       '#type' => 'email',
       '#description' => t("example@gmail.com"),
       '#required' => TRUE,
       '#ajax' => [
         'callback' => '::validateAjax',
-        'event' => 'change',
+        'event' => 'input',
         'progress' => [
           'type' => 'throbber',
           'message' => t('Verifying email..'),
         ],
       ],
-    );
-    $form['image'] = array(
+    ];
+    $form['image'] = [
       '#title' => t("Image:"),
       '#type' => 'managed_file',
       '#upload_location' => 'public://module-images',
-      '#upload_validators' => array(
-        'file_validate_extensions' => array('png jpg jpeg'),
-        'file_validate_size' => array(2097152),
-      ),
+      '#upload_validators' => [
+        'file_validate_extensions' => ['png jpg jpeg'],
+        'file_validate_size' => [2097152],
+      ],
       '#description' => t("insert image below size of 2MB. Supported formats: png jpg jpeg."),
       '#required' => TRUE,
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Add cat'),
       '#ajax' => [
@@ -98,7 +108,7 @@ class CatForm extends FormBase {
           'type' => 'throbber',
         ],
       ],
-    );
+    ];
     return $form;
   }
 
@@ -112,8 +122,11 @@ class CatForm extends FormBase {
     elseif (strlen($form_state->getValue('name')) > 32) {
       $form_state->setErrorByName('name', t('The name is too long. Please enter valid name.'));
     }
+    elseif (!preg_match('/^[A-Za-z]*$/', $form_state->getValue('name'))) {
+      $form_state->setErrorByName('name', t('The name should contain only letters. Please enter valid name.'));
+    }
     if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
-      $form_state->setErrorByName('name', t('Invalid email format. Please enter valid email.'));
+      $form_state->setErrorByName('email', t('Invalid email format. Please enter valid email.'));
     }
   }
 
@@ -122,13 +135,16 @@ class CatForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $connection = \Drupal::service('database');
+    $file = File::load($form_state->getValue('image')[0]) ;
+    $file->setPermanent();
+    $file->save();
     $result = $connection->insert('anzy')
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
         'uid' => $this->currentUser->id(),
         'created' => $this->currentTime->getCurrentTime(),
-        'image' => reset($form_state->getValue('image')),
+        'image' => $form_state->getValue('image')[0],
       ])
       ->execute();
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
@@ -139,8 +155,17 @@ class CatForm extends FormBase {
    */
   public function validateAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
-      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert-danger">Invalid email format. Please enter valid email.</div>'));
+    if (strlen($form_state->getValue('name')) < 2) {
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name is too short. Please enter valid name.</div>'));
+    }
+    elseif (strlen($form_state->getValue('name')) > 32) {
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name is too long. Please enter valid name.</div>'));
+    }
+    elseif (!preg_match('/^[A-Za-z]*$/', $form_state->getValue('name'))) {
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name should contain only letters. Please enter valid name.</div>'));
+    }
+    elseif (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Invalid email format. Please enter valid email.</div>'));
     }
     else {
       $response->addCommand(new HtmlCommand('#form-system-messages', ''));
