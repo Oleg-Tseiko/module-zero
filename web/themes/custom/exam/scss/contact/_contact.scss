@@ -107,3 +107,26 @@
     border-radius: 5px;
   }
 }
+.underline_cats {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #999;
+  span {
+    font-weight: 700;
+    padding: 0 5px 0 0;
+  }
+}
+.underline_cats {
+  &:nth-of-type(1) {
+    border-top: 1px solid #999;
+    padding-top: 10px;
+  }
+}
+.image-container {
+  height: 400px;
+  overflow: hidden;
+  img {
+    width: auto;
+    height: auto;
+  }
+}

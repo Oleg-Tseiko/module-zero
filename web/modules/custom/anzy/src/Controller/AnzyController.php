@@ -53,20 +53,10 @@ class AnzyController extends ControllerBase {
    * Render all cat entries.
    */
   public function report() {
-    $content = [];
-    $content['form'] = $this->form();
-    $content['message'] = [
-      '#markup' => $this->t('Below is a list of all cats including username, email, image and submission date.'),
-    ];
-    $headers = [
-      t('Cat name'),
-      t('Email'),
-      t('Submitted'),
-      t('Photo'),
-    ];
     $info = json_decode(json_encode($this->load()), TRUE);
     $info = array_reverse($info);
     $rows = [];
+    $form = $this->form();
     foreach ($info as &$value) {
       $fid = $value['image'];
       $file = File::load($fid);
@@ -80,13 +70,12 @@ class AnzyController extends ControllerBase {
       $value['image'] = $renderer->render($value['image']);
       array_push($rows, $value);
     }
-    $content['table'] = [
-      '#type' => 'table',
-      '#header' => $headers,
-      '#rows' => $rows,
-      '#empty' => t('No entries available.'),
+    return [
+      '#theme' => 'cat_template',
+      '#items' => $rows,
+      '#title' => $this->t('You can submit your cat and look at list of all submitted cats here.'),
+      '#form' => $form,
     ];
-    return $content;
   }
 
 }
