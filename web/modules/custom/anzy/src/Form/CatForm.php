@@ -27,19 +27,11 @@ class CatForm extends FormBase {
   protected $currentTime;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
     $instance->currentTime = $container->get('datetime.time');
-    $instance->currentUser = $container->get('current_user');
     return $instance;
   }
 
@@ -142,7 +134,7 @@ class CatForm extends FormBase {
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
-        'uid' => $this->currentUser->id(),
+        'uid' => $this->currentUser()->id(),
         'created' => date('d-m-Y', $this->currentTime->getCurrentTime()),
         'image' => $form_state->getValue('image')[0],
       ])
@@ -156,16 +148,16 @@ class CatForm extends FormBase {
   public function validateAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     if (strlen($form_state->getValue('name')) < 2) {
-      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name is too short. Please enter valid name.</div>'));
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('The name is too short. Please enter valid name.') . '</div>'));
     }
     elseif (strlen($form_state->getValue('name')) > 32) {
-      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name is too long. Please enter valid name.</div>'));
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('The name is too long. Please enter valid name.') . '</div>'));
     }
     elseif (!preg_match('/^[A-Za-z]*$/', $form_state->getValue('name'))) {
-      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>The name should contain only letters. Please enter valid name.</div>'));
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('The name should contain only letters. Please enter valid name.') . '</div>'));
     }
     elseif (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
-      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Invalid email format. Please enter valid email.</div>'));
+      $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('Invalid email format. Please enter valid email.') . '</div>'));
     }
     else {
       $response->addCommand(new HtmlCommand('#form-system-messages', ''));

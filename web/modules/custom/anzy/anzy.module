@@ -1,7 +1,7 @@
 <?php
 
 /*
-  * implementation of hook_search_preprocess
+  * implementation our hook 
   */
 
 function anzy_form_alter(&$form, &$form_state, $form_id) {
