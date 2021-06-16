@@ -2,6 +2,13 @@ anzy.cats_page:
   path: '/anzy/cats'
   defaults:
     _controller: '\Drupal\anzy\Controller\AnzyController::report'
-    _title: 'Hello! You can add here a photo of your cat.'
   requirements:
     _permission: 'access content'
+
+anzy.cats_delete_page:
+  path: '/anzy/catsDel/{cid}'
+  defaults:
+    _form: '\Drupal\anzy\Form\CatDeleteForm'
+    _title: 'Sure that you want to delete this cat?'
+  requirements:
+    _permission: 'administer nodes'

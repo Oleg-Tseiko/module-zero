@@ -36,6 +36,14 @@ class AnzyController extends ControllerBase {
   }
 
   /**
+   * Return delete button.
+   */
+  public function delete() {
+    $formdelete = $this->formBuilder->getForm('\Drupal\anzy\Form\CatDeleteForm');
+    return $formdelete;
+  }
+
+  /**
    * Get all cats for page.
    *
    * @return array
@@ -44,7 +52,7 @@ class AnzyController extends ControllerBase {
   public function load() {
     $connection = \Drupal::service('database');
     $query = $connection->select('anzy', 'a');
-    $query->fields('a', ['name', 'mail', 'created', 'image']);
+    $query->fields('a', ['name', 'mail', 'created', 'image', 'id']);
     $result = $query->execute()->fetchAll();
     return $result;
   }
@@ -55,26 +63,20 @@ class AnzyController extends ControllerBase {
   public function report() {
     $info = json_decode(json_encode($this->load()), TRUE);
     $info = array_reverse($info);
-    $rows = [];
     $form = $this->form();
+    $delete = $this->delete();
+    $rows = [];
     foreach ($info as &$value) {
       $fid = $value['image'];
       $file = File::load($fid);
-      $value['image'] = [
-        '#type' => 'image',
-        '#theme' => 'image_style',
-        '#style_name' => 'large',
-        '#uri' => $file->getFileUri(),
-      ];
-      $renderer = \Drupal::service('renderer');
-      $value['image'] = $renderer->render($value['image']);
+      $value['image'] = file_url_transform_relative(file_create_url($file->getFileUri()));
       array_push($rows, $value);
     }
     return [
       '#theme' => 'cat_template',
       '#items' => $rows,
-      '#title' => $this->t('You can submit your cat and look at list of all submitted cats here.'),
       '#form' => $form,
+      '#delete' => $delete,
     ];
   }
 
