@@ -9,7 +9,7 @@
 
   Drupal.behaviors.exam = {
     attach: function(context, settings) {
-
+      $(".ui-dialog-titlebar-close").text("×");
       // Custom code here
 
     }

@@ -67,8 +67,7 @@ class CatDeleteForm extends FormBase {
    */
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $currentURL = Url::fromRoute('<current>');
-    $response->addCommand(new RedirectCommand($currentURL->toString()));
+    $response->addCommand(new RedirectCommand('/anzy/cats'));
     return $response;
   }
 

@@ -136,7 +136,7 @@
 .deleteCat {
   background-color: #ff3232;
   color: white;
-  padding: 14px 20px;
+  padding: 10px 20px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
@@ -144,77 +144,66 @@
   opacity: 0.9;
   border-radius: 0.25rem;
   text-transform: uppercase;
+  font-size: 14px;
+  &:hover {
+    color: $white_color;
+    background-color: #00619a;
+    text-decoration: none;
+  }
 }
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 11; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: #474e5d;
-  padding-top: 120px;
-  text-align: center;
-  .container {
-    padding: 16px;
-  }
-  /* Style the horizontal ruler */
-  hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-  }
-
-  /* The Modal Close Button (x) */
-  .close {
-    position: absolute;
-    right: 35px;
-    top: 85px;
-    font-size: 40px;
-    font-weight: bold;
-    color: #f1f1f1;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: #f44336;
-    cursor: pointer;
-  }
-
-  /* Clear floats */
-  .clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
-  }
-  button  {
-    background-color: #04AA6D;
+.ui-widget {
+  width: 500px!important;
+  padding: 0;
+  border-radius: 5px;
+  outline: none;
+  border: none!important;
+}
+.ui-dialog .ui-dialog-titlebar {
+  padding: 15px;
+  margin-bottom: 30px;
+  background-color: #ff3232;
+  color: $white_color;
+  border: none;
+  border-radius: 4px;
+}
+#drupal-modal {
+  button {
+    background-color: #ff3232;
     color: white;
-    padding: 14px 20px;
-    margin: 8px auto;
+    padding: 0.625rem 1.25rem;
     border: none;
     cursor: pointer;
-    width: 320px;
-    opacity: 0.9;
+    width: 100px;
+    opacity: 1;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    font-size: 0.875rem;
     display: block;
-    border-radius: 5px;
-  }
-
-  button:hover {
-    opacity:1;
-  }
-  .cancelbtn {
-    background-color: #ccc;
-    color: black;
-  }
-  .form-submit {
-    background-color: #ff3232;
+    margin: 0 auto 20px;
+    background-image: none;
+    &focus {
+      border:none;
+      outline: none;
+      box-shadow: none;
+    }
   }
 }
+.cat-change-form {
+  display: inline-block;
+  button {
+    background-color: #ff3232;
+    width: 90px;
+    text-transform: uppercase;
+    padding: 10px 1.25rem;
+    border: none;
+    font-size: 14px;
+  }
 
+}
+.ui-dialog-titlebar-close {
+  border: none;
+  color: #FFF;
+}
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;

@@ -42,6 +42,13 @@ class AnzyController extends ControllerBase {
     $formdelete = $this->formBuilder->getForm('\Drupal\anzy\Form\CatDeleteForm');
     return $formdelete;
   }
+  /**
+   * Return edit button.
+   */
+  public function edit() {
+    $formedit = $this->formBuilder->getForm('\Drupal\anzy\Form\CatChangeForm');
+    return $formedit;
+  }
 
   /**
    * Get all cats for page.
@@ -65,6 +72,7 @@ class AnzyController extends ControllerBase {
     $info = array_reverse($info);
     $form = $this->form();
     $delete = $this->delete();
+    $edit = $this->edit();
     $rows = [];
     foreach ($info as &$value) {
       $fid = $value['image'];
@@ -77,6 +85,7 @@ class AnzyController extends ControllerBase {
       '#items' => $rows,
       '#form' => $form,
       '#delete' => $delete,
+      '#edit' => $edit,
     ];
   }
 
