@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\file\Entity\File;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Contains \Drupal\anzy\Form\CatForm.
@@ -19,21 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides an Cat form.
  */
 class CatForm extends FormBase {
-  /**
-   * The current time.
-   *
-   * @var \Drupal\Core\Datatime
-   */
-  protected $currentTime;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->currentTime = $container->get('datetime.time');
-    return $instance;
-  }
 
   /**
    * {@inheritdoc}
@@ -134,8 +118,7 @@ class CatForm extends FormBase {
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
-        'uid' => $this->currentUser()->id(),
-        'created' => date('d/m/Y G:i:s', $this->currentTime->getCurrentTime()),
+        'created' => date('d/m/Y G:i:s', time()),
         'image' => $form_state->getValue('image')[0],
       ])
       ->execute();

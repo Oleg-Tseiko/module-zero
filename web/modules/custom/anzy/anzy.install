@@ -9,12 +9,6 @@ function anzy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'uid' => array(
-        'description' => 'The {users}.uid that added this cat',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'name' => array(
         'description' => "User\'s cat name.",
         'type' => 'varchar',
