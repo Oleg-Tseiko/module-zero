@@ -5,6 +5,13 @@ anzy.cats_page:
   requirements:
     _permission: 'access content'
 
+anzy.admin_page:
+  path: '/admin/structure/cats'
+  defaults:
+    _controller: '\Drupal\anzy\Controller\AnzyAdminController::report'
+  requirements:
+    _permission: 'administer nodes'
+
 anzy.cats_delete_page:
   path: '/anzy/catsDel/{cid}'
   defaults:

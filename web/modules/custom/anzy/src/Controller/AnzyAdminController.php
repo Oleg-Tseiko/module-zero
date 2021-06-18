@@ -4,36 +4,11 @@ namespace Drupal\anzy\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides route responses for the Anzy module.
  */
-class AnzyController extends ControllerBase {
-
-  /**
-   * Form build interface.
-   *
-   * @var Drupal\Core\Form\FormBase
-   */
-  protected $formBuilder;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->formBuilder = $container->get('form_builder');
-    return $instance;
-  }
-
-  /**
-   * Return form for cats.
-   */
-  public function form() {
-    $form = $this->formBuilder->getForm('\Drupal\anzy\Form\CatForm');
-    return $form;
-  }
+class AnzyAdminController extends ControllerBase {
 
   /**
    * Get all cats for page.
@@ -55,7 +30,6 @@ class AnzyController extends ControllerBase {
   public function report() {
     $info = json_decode(json_encode($this->load()), TRUE);
     $info = array_reverse($info);
-    $form = $this->form();
     $rows = [];
     foreach ($info as &$value) {
       $fid = $value['image'];
@@ -64,9 +38,8 @@ class AnzyController extends ControllerBase {
       array_push($rows, $value);
     }
     return [
-      '#theme' => 'cat_template',
+      '#theme' => 'cat_admin',
       '#items' => $rows,
-      '#form' => $form,
     ];
   }
 
