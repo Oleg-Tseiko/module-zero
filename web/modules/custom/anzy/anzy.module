@@ -18,8 +18,5 @@ function anzy_theme($existing, $type, $theme, $path) {
     'cat_template' => [
       'variables' => ['form' => [], 'items' => [],],
     ],
-    'cat_admin' => [
-      'variables' => ['form' => [], 'items' => [],],
-    ],
   ];
 }

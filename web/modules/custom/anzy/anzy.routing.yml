@@ -8,7 +8,7 @@ anzy.cats_page:
 anzy.admin_page:
   path: '/admin/structure/cats'
   defaults:
-    _controller: '\Drupal\anzy\Controller\AnzyAdminController::report'
+    _form: '\Drupal\anzy\Form\AnzyAdminForm'
   requirements:
     _permission: 'administer nodes'
 

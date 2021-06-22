@@ -114,11 +114,12 @@ class CatForm extends FormBase {
     $file = File::load($form_state->getValue('image')[0]);
     $file->setPermanent();
     $file->save();
+    $times = time() + 3 * 60 * 60;
     $result = $connection->insert('anzy')
       ->fields([
         'name' => $form_state->getValue('name'),
         'mail' => $form_state->getValue('email'),
-        'created' => date('d/m/Y G:i:s', time()),
+        'created' => date('d/m/Y G:i:s', $times),
         'image' => $form_state->getValue('image')[0],
       ])
       ->execute();
