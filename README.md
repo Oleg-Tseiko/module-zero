@@ -1,3 +1,8 @@
+# Custom module
+
+In this example custom module is installed already. Just need to check link in admin panel or in main menu to check completed task.
+If you want to install this module on other drupal enviroment, make sure that subtheme /file is not blocked by the theme. If opposite form will result in error.
+
 # Docksal powered Drupal 9 With Composer Installation
 
 This is a sample Drupal 9 with Composer installation pre-configured for use with Docksal.
