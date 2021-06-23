@@ -8,6 +8,15 @@ base theme: bootstrap_barrio
 
 libraries:
   - exam/global-styling
+  -
+libraries-extend:
+  core/drupal.dropbutton:
+    - bootstrap_barrio/dropbutton
+  file/drupal.file:
+    - bootstrap_barrio/file
+  views/views.ajax:
+    - bootstrap_barrio/views.ajax
+
 libraries-override:
   bootstrap_barrio/global-styling: false
 regions:
