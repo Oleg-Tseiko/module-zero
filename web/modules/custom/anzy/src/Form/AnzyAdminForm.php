@@ -93,6 +93,11 @@ class AnzyAdminForm extends FormBase {
         '#attributes' => ['class' => ['button']],
       ];
       $value[5] = $renderer->render($edit);
+      $newId = [
+        '#type' => 'hidden',
+        '#value' => $id,
+      ];
+      $value[6] = $newId;
       array_push($rows, $value);
     }
     $form['table'] = [
@@ -113,6 +118,13 @@ class AnzyAdminForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $value = $form['table']['#value'];
+    $connection = \Drupal::service('database');
+    foreach ($value as $key => $val) {
+      $result = $connection->delete('anzy');
+      $result->condition('id', $form['table']['#options'][$key][6]["#value"]);
+      $result->execute();
+    }
     \Drupal::messenger()->addMessage($this->t('Form Submitted Successfully'), 'status', TRUE);
   }
 
