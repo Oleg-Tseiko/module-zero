@@ -1,0 +1,19 @@
+<h4>{{ 'Hello! You can add here a photo of your cat.'|trans }}</h4>
+{{ form }}
+<h4>{{ 'You can see list of all cats here.'|trans }}</h4>
+{% for item in items %}
+  <div class="row underline_cats">
+    <div class="col-md-3 offset-md-3">
+      <p><span>{{ 'Name:'|trans }} </span>{{ item.name }}</p>
+      <p><span>{{ 'Email:'|trans }} </span>{{ item.mail }}</p>
+      <p><span>{{ 'Submitted:'|trans }} </span>{{ item.created }}</p>
+      {% if user.hasPermission('administer nodes') %}
+        <a href="/anzy/catsDel/{{ item.id }}" class="deleteCat use-ajax" data-dialog-type="modal">{{ 'Delete'|trans }}</a>
+        <a href="/admin/anzy/catsChange/{{ item.id }}" class="deleteCat">{{ 'Edit'|trans }}</a>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <div class="image-container"><a href="{{ item.image }}" target="_blank"><img src="{{ item.image }}" alt="cat image"></a></div>
+    </div>
+  </div>
+{% endfor %}

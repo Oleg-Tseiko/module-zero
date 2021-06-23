@@ -1,0 +1,6 @@
+anzy.admin_settings:
+  title: 'Cats list'
+  description: 'Delete or edit submitted cat photos'
+  parent: system.admin_structure
+  route_name: anzy.admin_page
+  weight: 10

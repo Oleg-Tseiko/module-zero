@@ -64,3 +64,156 @@
     }
   }
 }
+.cat-form {
+  .alert-danger {
+    padding: 20px;
+    .list-group-item {
+      background-color: #ff4444;
+    }
+  }
+  input {
+    padding: 1.5625rem 0.625rem;
+    border-radius: 0;
+  }
+  button {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 0.9375rem 1.25rem;
+    text-transform: uppercase;
+    background-color: #ff3232;
+    border: none;
+  }
+  .form-required {
+    margin-top: 10px;
+  }
+  #form-system-messages {
+    button {
+      background-color: transparent;
+      margin-top: 5px;
+    }
+  }
+  .form-file {
+    padding: 3px 5px 0;
+    width: 300px;
+  }
+  .file--image {
+    margin-right: 55px;
+  }
+  .messages--error {
+    background-color: #ff4444;
+    padding: 12px;
+    color: #FFF;
+    margin: 10px 0;
+    border-radius: 5px;
+  }
+}
+.underline_cats {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #999;
+  span {
+    font-weight: 700;
+    padding: 0 5px 0 0;
+  }
+}
+.underline_cats {
+  &:nth-of-type(1) {
+    border-top: 1px solid #999;
+    padding-top: 10px;
+  }
+}
+.image-container {
+  height: 400px;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Add padding and center-align text to the container */
+
+.deleteCat {
+  background-color: #ff3232;
+  color: white;
+  padding: 10px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-size: 14px;
+  &:hover {
+    color: $white_color;
+    background-color: #00619a;
+    text-decoration: none;
+  }
+}
+.ui-widget {
+  width: 500px!important;
+  padding: 0;
+  border-radius: 5px;
+  outline: none;
+  border: none!important;
+}
+.ui-dialog .ui-dialog-titlebar {
+  padding: 15px;
+  margin-bottom: 30px;
+  background-color: #ff3232;
+  color: $white_color;
+  border: none;
+  border-radius: 4px;
+}
+#drupal-modal {
+  button {
+    background-color: #ff3232;
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    opacity: 1;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    display: block;
+    margin: 0 auto 20px;
+    background-image: none;
+    &focus {
+      border:none;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+.cat-change-form {
+  display: inline-block;
+  button {
+    background-color: #ff3232;
+    width: 90px;
+    text-transform: uppercase;
+    padding: 10px 1.25rem;
+    border: none;
+    font-size: 14px;
+  }
+
+}
+.ui-dialog-titlebar-close {
+  border: none;
+  color: #FFF;
+}
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+/* Change styles for cancel button and delete button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .deletebtn {
+    width: 100%;
+  }
+}

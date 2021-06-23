@@ -33,7 +33,7 @@
         "drupal/slick_views": "^2.4",
         "drupal/social_media_links": "^2.8",
         "drupal/webform": "^6.0",
-        "drush/drush": "^10.2"
+        "drush/drush": "^10.5"
     },
     "conflict": {
         "drupal/drupal": "*"
