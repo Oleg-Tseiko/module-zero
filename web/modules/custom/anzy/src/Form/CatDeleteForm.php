@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Url;
 
 /**
  * Contains \Drupal\anzy\Form\CatDeleteForm.
@@ -66,7 +67,8 @@ class CatDeleteForm extends FormBase {
    */
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $response->addCommand(new RedirectCommand('/anzy/cats'));
+    $currentURL = Url::fromRoute('<current>');
+    $response->addCommand(new RedirectCommand($currentURL->toString()));
     return $response;
   }
 

@@ -8,7 +8,7 @@
       <p><span>{{ 'Email:'|trans }} </span>{{ item.mail }}</p>
       <p><span>{{ 'Submitted:'|trans }} </span>{{ item.created }}</p>
       {% if user.hasPermission('administer nodes') %}
-        <a href="/anzy/catsDel/{{ item.id }}" class="deleteCat use-ajax" data-dialog-type="modal">{{ 'Delete'|trans }}</a>
+        <a href="/admin/anzy/catsDel/{{ item.id }}" class="deleteCat use-ajax" data-dialog-type="modal">{{ 'Delete'|trans }}</a>
         <a href="/admin/anzy/catsChange/{{ item.id }}" class="deleteCat">{{ 'Edit'|trans }}</a>
       {% endif %}
     </div>

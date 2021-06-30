@@ -41,7 +41,7 @@ class CatForm extends FormBase {
       '#description' => t("Name should be at least 2 characters and less than 32 characters"),
       '#required' => TRUE,
       '#ajax' => [
-        'callback' => '::validateAjax',
+        'callback' => '::validateNameAjax',
         'event' => 'input',
         'progress' => [
           'type' => 'throbber',
@@ -55,7 +55,7 @@ class CatForm extends FormBase {
       '#description' => t("example@gmail.com"),
       '#required' => TRUE,
       '#ajax' => [
-        'callback' => '::validateAjax',
+        'callback' => '::validateMailAjax',
         'event' => 'input',
         'progress' => [
           'type' => 'throbber',
@@ -129,7 +129,7 @@ class CatForm extends FormBase {
   /**
    * Function that validate email input with ajax.
    */
-  public function validateAjax(array &$form, FormStateInterface $form_state) {
+  public function validateNameAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     if (strlen($form_state->getValue('name')) < 2) {
       $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('The name is too short. Please enter valid name.') . '</div>'));
@@ -140,7 +140,18 @@ class CatForm extends FormBase {
     elseif (!preg_match('/^[A-Za-z]*$/', $form_state->getValue('name'))) {
       $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('The name should contain only letters. Please enter valid name.') . '</div>'));
     }
-    elseif (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
+    else {
+      $response->addCommand(new HtmlCommand('#form-system-messages', ''));
+    }
+    return $response;
+  }
+
+  /**
+   * Function that validate email input with ajax.
+   */
+  public function validateMailAjax(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
       $response->addCommand(new HtmlCommand('#form-system-messages', '<div class="alert alert-dismissible fade show col-12 alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' . t('Invalid email format. Please enter valid email.') . '</div>'));
     }
     else {

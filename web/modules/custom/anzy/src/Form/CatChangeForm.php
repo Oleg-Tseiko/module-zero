@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 
 /**
@@ -39,7 +40,7 @@ class CatChangeForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $cid = NULL) {
     $form['system_messages'] = [
-      '#markup' => '<div id="message-error" class="messages messages--error"></div>',
+      '#markup' => '<div id="error-warnings"></div>',
       '#weight' => -100,
     ];
     $form['name'] = [
@@ -49,7 +50,7 @@ class CatChangeForm extends FormBase {
       '#description' => t("Name should be at least 2 characters and less than 32 characters"),
       '#required' => TRUE,
       '#ajax' => [
-        'callback' => '::validateAjax',
+        'callback' => '::validateNameAjax',
         'event' => 'change',
         'progress' => [
           'type' => 'throbber',
@@ -63,7 +64,7 @@ class CatChangeForm extends FormBase {
       '#description' => t("example@gmail.com"),
       '#required' => TRUE,
       '#ajax' => [
-        'callback' => '::validateAjax',
+        'callback' => '::validateMailAjax',
         'event' => 'change',
         'progress' => [
           'type' => 'throbber',
@@ -116,24 +117,35 @@ class CatChangeForm extends FormBase {
   }
 
   /**
-   * Function that validate email input with ajax.
+   * Function that validate name input with ajax.
    */
-  public function validateAjax(array &$form, FormStateInterface $form_state) {
+  public function validateNameAjax(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     if (strlen($form_state->getValue('name')) < 2) {
-      $response->addCommand(new HtmlCommand('#message-error', '<div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name is too short. Please enter valid name.') . '</div>'));
+      $response->addCommand(new HtmlCommand('#error-warnings', '<div id="message-error" class="messages messages--error"><div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name is too short. Please enter valid name.') . '</div></div>'));
     }
     elseif (strlen($form_state->getValue('name')) > 32) {
-      $response->addCommand(new HtmlCommand('#message-error', '<div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name is too long. Please enter valid name.') . '</div>'));
+      $response->addCommand(new HtmlCommand('#error-warnings', '<div id="message-error" class="messages messages--error"><div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name is too long. Please enter valid name.') . '</div></div>'));
     }
     elseif (!preg_match('/^[A-Za-z]*$/', $form_state->getValue('name'))) {
-      $response->addCommand(new HtmlCommand('#message-error', '<div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name should contain only letters. Please enter valid name.') . '</div>'));
-    }
-    elseif (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
-      $response->addCommand(new HtmlCommand('#message-error', '<div class="alert alert-dismissible fade show col-12 alert-danger">' . t('Invalid email format. Please enter valid email.') . '</div>'));
+      $response->addCommand(new HtmlCommand('#error-warnings', '<div id="message-error" class="messages messages--error"><div class="alert alert-dismissible fade show col-12 alert-danger">' . t('The name should contain only letters. Please enter valid name.') . '</div></div>'));
     }
     else {
-      $response->addCommand(new HtmlCommand('#message-error', ''));
+      $response->addCommand(new HtmlCommand('#error-warnings', ''));
+    }
+    return $response;
+  }
+
+  /**
+   * Function that validate email input with ajax.
+   */
+  public function validateMailAjax(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if (!filter_var($form_state->getValue('email'), FILTER_VALIDATE_EMAIL)) {
+      $response->addCommand(new HtmlCommand('#error-warnings', '<div id="message-error" class="messages messages--error"><div class="alert alert-dismissible fade show col-12 alert-danger">' . t('Invalid email format. Please enter valid email.') . '</div></div>'));
+    }
+    else {
+      $response->addCommand(new HtmlCommand('#error-warnings', ''));
     }
     return $response;
   }
@@ -162,7 +174,8 @@ class CatChangeForm extends FormBase {
    */
   public function ajaxForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $response->addCommand(new RedirectCommand('/anzy/cats'));
+    $currentURL = Url::fromRoute('<current>');
+    $response->addCommand(new RedirectCommand($currentURL->toString()));
     return $response;
   }
 

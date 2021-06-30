@@ -1,43 +1,52 @@
 <?php
+
+/**
+ * @file
+ * Contains db scheme.
+ */
+
+/**
+ * Provides tables with id, name , mail, image, created for db.
+ */
 function anzy_schema() {
-  $schema['anzy'] = array(
+  $schema['anzy'] = [
     'description' => 'stores email, name and uid for cats',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'description' => 'The primary identifier for the cat.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'description' => "User\'s cat name.",
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
         'default' => '',
-      ),
-      'mail' => array(
+      ],
+      'mail' => [
         'description' => "User\'s email address.",
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
         'default' => '',
-      ),
-      'image' => array(
+      ],
+      'image' => [
         'description' => "User\'s cat picture.",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'created' => array(
+      ],
+      'created' => [
         'description' => 'Timestamp when cat was submitted.',
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
         'default' => '',
-      ),
-    ),
-    'primary key' => array('id'),
-  );
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
   return $schema;
 }
