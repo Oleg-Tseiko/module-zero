@@ -2,6 +2,7 @@
 
 In this example custom module is installed already. Just need to check link in admin panel or in main menu to check completed task.
 If you want to install this module on other drupal enviroment, make sure that subtheme /file is not blocked by the theme. If opposite form will result in error.
+Also recommended to clear cache and install php 7.4 or it could result in error.
 
 # Docksal powered Drupal 9 With Composer Installation
 
