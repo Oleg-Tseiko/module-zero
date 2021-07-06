@@ -65,6 +65,8 @@ class AnzyAdminForm extends FormBase {
       $created = $value['created'];
       array_splice($value, 0, 5);
       $renderer = \Drupal::service('renderer');
+      $dest = $this->getDestinationArray();
+      $dest = $dest['destination'];
       $file = File::load($fid);
       $img = [
         '#type' => 'image',
@@ -78,7 +80,7 @@ class AnzyAdminForm extends FormBase {
       $value[3] = $renderer->render($img);
       $delete = [
         '#type' => 'link',
-        '#url' => Url::fromUserInput("/anzy/catsDel/$id"),
+        '#url' => Url::fromUserInput("/admin/anzy/catsDel/$id?destination=$dest"),
         '#title' => $this->t('Delete'),
         '#attributes' => [
           'data-dialog-type' => ['modal'],
@@ -88,7 +90,7 @@ class AnzyAdminForm extends FormBase {
       $value[4] = $renderer->render($delete);
       $edit = [
         '#type' => 'link',
-        '#url' => Url::fromUserInput("/admin/anzy/catsChange/$id"),
+        '#url' => Url::fromUserInput("/admin/anzy/catsChange/$id?destination=$dest"),
         '#title' => $this->t('Edit'),
         '#attributes' => ['class' => ['button']],
       ];

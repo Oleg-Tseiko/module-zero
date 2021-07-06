@@ -56,6 +56,7 @@ class AnzyController extends ControllerBase {
     $info = json_decode(json_encode($this->load()), TRUE);
     $info = array_reverse($info);
     $form = $this->form();
+    $dest = $this->getDestinationArray();
     $rows = [];
     foreach ($info as &$value) {
       $fid = $value['image'];
@@ -67,6 +68,7 @@ class AnzyController extends ControllerBase {
       '#theme' => 'cat_template',
       '#items' => $rows,
       '#form' => $form,
+      '#dest' => $dest['destination'],
     ];
   }
 
